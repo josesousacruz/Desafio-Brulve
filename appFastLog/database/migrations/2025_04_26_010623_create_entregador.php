@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('telefone', 20);
             $table->enum('tipoVeiculo', ['bicicleta', 'caminhão', 'van', 'motocicleta']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
