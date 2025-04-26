@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('destinatarioEndereco', 255);
             $table->string('destinatarioTelefone', 20);
             $table->string('itemDescricao', 255);
-            $table->enum('status', ['criado', 'aguardando coleta', 'coleta realizada', 'saiu para entrega', 'entrega realizada', 'cancelado']);
+            $table->enum('status', ['criado', 'aguardando coleta', 'coleta realizada', 'saiu para entrega', 'entrega realizada', 'cancelado'])->default('criado');
             $table->unsignedBigInteger('entregador_id');
             $table->foreign('entregador_id')->references('id')->on('entregador');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
