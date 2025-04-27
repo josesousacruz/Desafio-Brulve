@@ -7,6 +7,7 @@ use App\Traits\ValidationMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Yajra\DataTables\Facades\DataTables;
 
 class UsuarioController extends Controller
 {
@@ -19,8 +20,12 @@ class UsuarioController extends Controller
     {
         if($request->expectsJson()){
             $usuarios = User::all();
-            return response()->json($usuarios);
+            // return response()->json($usuarios);
+            return DataTables::of($usuarios)
+            ->addIndexColumn()
+            ->make(true);
         }
+        
 
         return view('usuario.index');
     }

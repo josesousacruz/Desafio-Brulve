@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Entregador;
 use App\Traits\ValidationMessages;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class EntregadorController extends Controller
 {
@@ -16,7 +17,10 @@ class EntregadorController extends Controller
     {
         if($request->expectsJson()){
             $entregadores = Entregador::all();
-            return response()->json($entregadores);
+            // return response()->json($entregadores);
+            return DataTables::of($entregadores)
+            ->addIndexColumn()
+            ->make(true);
         }
 
         return view('entregador.index');
