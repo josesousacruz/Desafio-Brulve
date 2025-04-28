@@ -20,7 +20,6 @@ class UsuarioController extends Controller
     {
         if($request->expectsJson()){
             $usuarios = User::all();
-            // return response()->json($usuarios);
             return DataTables::of($usuarios)
             ->addIndexColumn()
             ->make(true);
@@ -61,9 +60,9 @@ class UsuarioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(Request $request, string $id)
     {
-        $usuario = User::find($request->id);
+        $usuario = User::find($id);
         if(!$usuario){
             return response()->json(['message' => 'Usuário não encontrado!'], 404);
         }
@@ -82,9 +81,9 @@ class UsuarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        $usuario = User::find($request->id);
+        $usuario = User::find($id);
         
         if(!$usuario){
             return response()->json(['message' => 'Usuário não encontrado!'], 404);
@@ -113,9 +112,9 @@ class UsuarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, string $id)
     {
-        $usuario = User::find($request->id);
+        $usuario = User::find($id);
 
         if(!$usuario){
             return response()->json(['message' => 'Usuário não encontrado!'], 404);

@@ -16,7 +16,9 @@ class PedidoController extends Controller
     {
         if($request->expectsJson()){
             $pedidos = Pedido::with('entregador')->get();
-            return response()->json($pedidos);
+            return DataTables::of($pedidos)
+            ->addIndexColumn()
+            ->make(true);
         }
 
         return view('pedido.index');
@@ -55,9 +57,9 @@ class PedidoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(Request $request, string $id)
     {
-        $pedido = Pedido::with('entregador')->find($request->id);
+        $pedido = Pedido::with('entregador')->find($id);
         if(!$pedido){
             return response()->json(['message' => 'Pedido não encontrado!'], 404);
         }
@@ -76,9 +78,9 @@ class PedidoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        $pedido = Pedido::find($request->id);
+        $pedido = Pedido::find($id);
         
         if(!$pedido){
             return response()->json(['message' => 'Pedido não encontrado!'], 404);
@@ -105,9 +107,9 @@ class PedidoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, string $id)
     {
-        $pedido = Pedido::find($request->id);
+        $pedido = Pedido::find($id);
 
         if(!$pedido){
             return response()->json(['message' => 'Pedido não encontrado!'], 404);

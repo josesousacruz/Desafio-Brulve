@@ -17,7 +17,6 @@ class EntregadorController extends Controller
     {
         if($request->expectsJson()){
             $entregadores = Entregador::all();
-            // return response()->json($entregadores);
             return DataTables::of($entregadores)
             ->addIndexColumn()
             ->make(true);
@@ -55,7 +54,7 @@ class EntregadorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(Request $request, string $id)
     {
         $entregador = Entregador::find($request->id);
         if(!$entregador){
@@ -76,9 +75,9 @@ class EntregadorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        $entregador = Entregador::find($request->id);
+        $entregador = Entregador::find($id);
         
         if(!$entregador){
             return response()->json(['message' => 'Entregador não encontrado!!'], 404);
@@ -101,7 +100,7 @@ class EntregadorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, string $id)
     {
         $entregador = Entregador::find($request->id);
 
