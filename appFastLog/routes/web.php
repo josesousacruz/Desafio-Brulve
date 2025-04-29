@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('usuario', UsuarioController::class);
     Route::resource('entregador', EntregadorController::class);
     Route::resource('pedido', PedidoController::class);
+
+    Route::get('/entregadores-disponiveis', [EntregadorController::class, 'entregadoresDisponiveis'])->name('entregador.disponivel');
+    Route::get('/entregadores-disponiveis/{id}', [EntregadorController::class, 'entregadoresDisponiveisPorTipoVeiculo'])->name('entregador.disponivel.veiculo');
+
 });
 
 Route::resource('status-pedido', StatusPedidoController::class)->except(['create', 'edit']);

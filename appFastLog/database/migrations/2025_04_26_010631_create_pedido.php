@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('itemDescricao', 255);
             $table->unsignedBigInteger('status_pedido_id')->default(1); // Default para 'criado'
             $table->foreign('status_pedido_id')->references('id')->on('status_pedido');
-            $table->unsignedBigInteger('entregador_id');
+            $table->unsignedBigInteger('entregador_id')->nullable();
             $table->foreign('entregador_id')->references('id')->on('entregador');
+            $table->unsignedBigInteger('tipo_veiculo_id');
+            $table->foreign('tipo_veiculo_id')->references('id')->on('tipo_veiculo');
             $table->timestamps();
             $table->softDeletes();
         });
