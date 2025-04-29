@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entregador;
+use App\Models\Pedido;
+use App\Models\TipoVeiculo;
 use App\Traits\ValidationMessages;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -116,5 +118,31 @@ class EntregadorController extends Controller
         
         $entregador->delete();
         return response()->json(['message' => 'Entregador removido com sucesso!!']);
+    }
+
+    public function entregadoresDisponiveis()
+    {
+        $entregadores_disponiveis = Entregador::select('id','nome','telefone')->whereDoesntHave('pedidos', function($query) {
+            $query->whereIn('status_pedido_id', [2,3,4]);
+        })->get();
+        
+        return response()->json($entregadores_disponiveis);
+    }
+
+    public function entregadoresDisponiveisPorTipoVeiculo(Request $request, string $tipo_veiculo_id)
+    {
+
+        if(TipoVeiculo::find($tipo_veiculo_id) == null){
+            return response()->json(['message' => 'Tipo de veiculo não encontrado!!'], 404);
+        }
+        $entregadores_disponiveis = Entregador::select('id','nome','telefone')->whereDoesntHave('pedidos', function($query) {
+            $query->whereIn('status_pedido_id', [2,3,4]);
+        });
+        if($tipo_veiculo_id){
+            $entregadores_disponiveis->where('tipo_veiculo_id', $tipo_veiculo_id);
+        }
+        $entregadores_disponiveis = $entregadores_disponiveis->get();
+
+        return response()->json($entregadores_disponiveis);
     }
 }
