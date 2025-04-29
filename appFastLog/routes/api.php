@@ -30,19 +30,21 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', 'abilities:pedido:read'])->group(function () {
         Route::get('/pedido', function () {
-            return Pedido::all();
+            return Pedido::select('pedido.id', 'pedido.numeroPedido', 'pedido.destinatarioNome', 'pedido.destinatarioTelefone','pedido.destinatarioEndereco', 'pedido.itemDescricao','pedido.status', 'entregador.nome as entregador')
+                ->join('entregador', 'pedido.entregador_id', '=', 'entregador.id')
+                ->get();
         });
         
         Route::get('/pedido/{id}', function ($id) {
-            $pedido = Pedido::find($id);
+            $pedido = Pedido::select('pedido.id', 'pedido.numeroPedido', 'pedido.destinatarioNome', 'pedido.destinatarioTelefone','pedido.destinatarioEndereco', 'pedido.itemDescricao','pedido.status', 'entregador.nome as entregador')
+                ->join('entregador', 'pedido.entregador_id', '=', 'entregador.id')
+                ->where('pedido.id', $id)
+                ->first();
+
             if(!$pedido)
                 return response()->json(['message' => 'Pedido não encontrado!'], 404);
 
-            return Pedido::find($id);
+            return $pedido;
         });
     });
 });
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
