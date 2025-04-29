@@ -16,7 +16,7 @@ class EntregadorController extends Controller
     public function index(Request $request)
     {
         if($request->expectsJson()){
-            $entregadores = Entregador::all();
+            $entregadores = Entregador::with('tipoVeiculo:id,tipo');
             return DataTables::of($entregadores)
             ->addIndexColumn()
             ->make(true);
@@ -42,7 +42,7 @@ class EntregadorController extends Controller
             $validate = $request->validate([
                 'nome' => 'required|string|max:100',
                 'telefone' => 'required|phone:BR',
-                'tipoVeiculo' => 'required|in:bicicleta,caminhão,van,motocicleta',
+                'tipo_veiculo_id' => 'required|exists:tipo_veiculo,id',
             ], $this->getEntregadorValidationMessages());
            
             $entregador = Entregador::create($validate);
@@ -88,7 +88,7 @@ class EntregadorController extends Controller
             $validate = $request->validate([
                 'nome' => 'required|string|max:100',
                 'telefone' => 'required|phone:BR',
-                'tipoVeiculo' => 'required|in:bicicleta,caminhão,van,motocicleta',
+                'tipo_veiculo_id' => 'required|exists:tipo_veiculo,id',
             ], $this->getEntregadorValidationMessages());
 
             $entregador->update($validate);

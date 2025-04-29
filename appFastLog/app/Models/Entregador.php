@@ -10,7 +10,12 @@ class Entregador extends Model
 {
     use SoftDeletes, HasFactory;
     protected $table = 'entregador';
-    protected $fillable = ['nome', 'telefone', 'tipoVeiculo'];
+    protected $fillable = ['nome', 'telefone', 'tipo_veiculo_id'];
+
+    public function tipoVeiculo()
+    {
+        return $this->belongsTo(TipoVeiculo::class);
+    }
 
     public function pedidos()
     {

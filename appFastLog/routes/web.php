@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntregadorController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\StatusPedidoController;
+use App\Http\Controllers\TipoVeiculoController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,4 +32,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('pedido', PedidoController::class);
 });
 
+Route::resource('status-pedido', StatusPedidoController::class)->except(['create', 'edit']);
+Route::resource('tipo-veiculo', TipoVeiculoController::class)->except(['create', 'edit']);
 require __DIR__.'/auth.php';

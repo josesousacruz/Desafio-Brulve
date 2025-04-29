@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User; // Adicionar esta linha
+use Illuminate\Support\Facades\Hash; // Adicionar esta linha
 
 return new class extends Migration
 {
@@ -20,6 +22,13 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        // Adicionar usuário de teste
+        User::create([
+            'name' => 'Usuário Teste',
+            'email' => 'teste@example.com',
+            'password' => Hash::make('password'), // Lembre-se de usar uma senha segura
+        ]);
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

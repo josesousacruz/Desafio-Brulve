@@ -16,7 +16,7 @@ class PedidoController extends Controller
     public function index(Request $request)
     {
         if($request->expectsJson()){
-            $pedidos = Pedido::with('entregador')->get();
+            $pedidos = Pedido::with('entregador', 'statusPedido:id,status')->get();
             return DataTables::of($pedidos)
             ->addIndexColumn()
             ->make(true);
@@ -60,7 +60,7 @@ class PedidoController extends Controller
      */
     public function show(Request $request, string $id)
     {
-        $pedido = Pedido::with('entregador')->find($id);
+        $pedido = Pedido::with('entregador', 'statusPedido')->find($id);
         if(!$pedido){
             return response()->json(['message' => 'Pedido não encontrado!'], 404);
         }
@@ -95,7 +95,7 @@ class PedidoController extends Controller
             'destinatarioTelefone' => 'required|phone:BR',
             'itemDescricao' => 'required|string|max:500',
             'entregador_id' => 'required|exists:entregador,id,deleted_at,NULL',
-            'status' => 'required'
+            'status_pedido_id' => 'required|exists:status_pedido,id'
         ], $this->getPedidoValidationMessages());
 
         $pedido->update($validate);
@@ -116,7 +116,8 @@ class PedidoController extends Controller
             return response()->json(['message' => 'Pedido não encontrado!'], 404);
         }
 
-        if($pedido->status == 'entrega realizada'){
+        // Assumindo que 'entrega realizada' tem ID 5 na tabela status_pedido
+        if($pedido->status_pedido_id == 5){
             return response()->json(['message' => 'Não é possível remover pedidos concluidos!'], 400);
         }
         

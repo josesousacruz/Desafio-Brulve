@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB; // Adicionar esta linha
 
 return new class extends Migration
 {
@@ -11,15 +12,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entregador', function (Blueprint $table) {
+        Schema::create('tipo_veiculo', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 100);
-            $table->string('telefone', 20);
-            $table->unsignedBigInteger('tipo_veiculo_id');
-            $table->foreign('tipo_veiculo_id')->references('id')->on('tipo_veiculo');
+            $table->string('tipo', 15);
             $table->timestamps();
-            $table->softDeletes();
         });
+
+        DB::table('tipo_veiculo')->insert([
+            ['tipo' => 'bicicleta'],
+            ['tipo' => 'caminhão'],
+            ['tipo' => 'van'],
+            ['tipo' => 'motocicleta']
+        ]);
     }
 
     /**
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entregador');
+        Schema::dropIfExists('tipo_veiculo');
     }
 };

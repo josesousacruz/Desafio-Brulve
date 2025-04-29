@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('destinatarioEndereco', 255);
             $table->string('destinatarioTelefone', 20);
             $table->string('itemDescricao', 255);
-            $table->enum('status', ['criado', 'aguardando coleta', 'coleta realizada', 'saiu para entrega', 'entrega realizada', 'cancelado'])->default('criado');
+            $table->unsignedBigInteger('status_pedido_id')->default(1); // Default para 'criado'
+            $table->foreign('status_pedido_id')->references('id')->on('status_pedido');
             $table->unsignedBigInteger('entregador_id');
             $table->foreign('entregador_id')->references('id')->on('entregador');
             $table->timestamps();
