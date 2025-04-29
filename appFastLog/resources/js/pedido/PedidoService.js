@@ -1,56 +1,29 @@
 export default class PedidoService {
-    constructor() {
-        this.baseUrl = '/pedidos';
+    constructor(baseURL = '/pedido') {
+        this.baseURL = baseURL;
     }
 
-    async listar() {
-        const response = await fetch(this.baseUrl);
-        return await response.json();
+    async listar(params = {}) {
+        return axios.get(this.baseURL, { params });
     }
 
-    async criar(dados) {
-        const response = await fetch(this.baseUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify(dados)
-        });
-        return await response.json();
+    async criar(data) {
+        return axios.post(this.baseURL, data);
     }
 
-    async atualizar(id, dados) {
-        const response = await fetch(`${this.baseUrl}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify(dados)
-        });
-        return await response.json();
+    async atualizar(id, data) {
+        return axios.put(`${this.baseURL}/${id}`, data);
     }
 
     async excluir(id) {
-        const response = await fetch(`${this.baseUrl}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        });
-        return await response.json();
+        return axios.delete(`${this.baseURL}/${id}`);
+    }
+
+    async buscar(id) {
+        return axios.get(`${this.baseURL}/${id}`);
     }
 
     async atualizarStatus(id, status) {
-        const response = await fetch(`${this.baseUrl}/${id}/status`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ status })
-        });
-        return await response.json();
+        return axios.put(`${this.baseURL}/${id}/status`, { status });
     }
 }

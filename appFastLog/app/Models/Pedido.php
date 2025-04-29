@@ -9,7 +9,7 @@ class Pedido extends Model
 {
     use SoftDeletes;
     protected $table = 'pedido';
-    protected $fillable = ['numeroPedido', 'destinatarioNome', 'destinatarioEndereco', 'destinatarioTelefone', 'itemDescricao','entregador_id'];
+    protected $fillable = ['numeroPedido', 'destinatarioNome', 'destinatarioEndereco', 'destinatarioTelefone', 'itemDescricao','entregador_id','status'];
     
     public function entregador()
     {

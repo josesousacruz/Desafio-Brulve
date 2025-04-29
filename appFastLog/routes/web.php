@@ -24,9 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::resource('usuario', UsuarioController::class);
     Route::resource('entregador', EntregadorController::class);
     Route::resource('pedido', PedidoController::class);
-    Route::resource('usuario', UsuarioController::class);
 });
 
 require __DIR__.'/auth.php';

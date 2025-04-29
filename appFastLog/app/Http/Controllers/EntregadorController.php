@@ -44,6 +44,7 @@ class EntregadorController extends Controller
                 'telefone' => 'required|phone:BR',
                 'tipoVeiculo' => 'required|in:bicicleta,caminhão,van,motocicleta',
             ], $this->getEntregadorValidationMessages());
+           
             $entregador = Entregador::create($validate);
             return response()->json($entregador);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -56,7 +57,7 @@ class EntregadorController extends Controller
      */
     public function show(Request $request, string $id)
     {
-        $entregador = Entregador::find($request->id);
+        $entregador = Entregador::find($id);
         if(!$entregador){
             return response()->json(['message' => 'Entregador não encontrado!!'], 404);
         }
@@ -102,7 +103,7 @@ class EntregadorController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
-        $entregador = Entregador::find($request->id);
+        $entregador = Entregador::find($id);
 
         if(!$entregador){
             return response()->json(['message' => 'Entregador não encontrado!!'], 404);

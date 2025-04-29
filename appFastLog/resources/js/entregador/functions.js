@@ -1,61 +1,177 @@
-export function initEvents(service) {
-    const form = document.querySelector('#entregador-form');
-    const modal = document.querySelector('#entregador-modal');
+import EntregadorService from './EntregadorService';
+import Swal from 'sweetalert2';
+import { Offcanvas } from'bootstrap';
 
-    document.querySelector('#novo-entregador').addEventListener('click', () => {
-        form.reset();
-        form.dataset.mode = 'create';
-        delete form.dataset.id;
-    });
+const entregadorService = new EntregadorService();
 
-    form.addEventListener('submit', async (e) => {
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+export const criarEntregador = () => {
+    const formHtml = `
+        <form id="form-criar-entregador" class="d-flex flex-column h-100">
+            <div class="flex-grow-1">
+                <div class="mb-3 text-start">
+                    <label for="input-name" class="form-label">Nome <span class="text-danger">*</span></label>
+                    <input id="input-name" class="form-control" placeholder="Digite o nome">
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="input-telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
+                    <input id="input-telefone" class="form-control" placeholder="Digite o telefone">
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="input-tipo-veiculo" class="form-label">Tipo de Veículo <span class="text-danger">*</span></label>
+                    <select id="input-tipo-veiculo" class="form-select">
+                        <option value="">Selecione o tipo de veículo</option>
+                        <option value="bicicleta">Bicicleta</option>
+                        <option value="caminhao">Caminhão</option>
+                        <option value="van">Van</option>
+                        <option value="motocicleta">Motocicleta</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
+            </div>
+        </form>
+    `;
+
+    document.getElementById('OffcanvasLabel').innerText = 'Cadastrar Entregador';
+    document.getElementById('OffcanvasContent').innerHTML = formHtml;
+
+    const offcanvasElement = document.getElementById('Offcanvas');
+    const offcanvas = new Offcanvas(offcanvasElement);
+    offcanvas.show();
+
+    document.getElementById('form-criar-entregador').addEventListener('submit', function(e) {
         e.preventDefault();
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
 
-        try {
-            if (form.dataset.mode === 'edit') {
-                await service.atualizar(form.dataset.id, data);
-            } else {
-                await service.criar(data);
-            }
+        const nome = document.getElementById('input-name').value.trim();
+        const telefone = document.getElementById('input-telefone').value.trim();
+        const tipoVeiculo = document.getElementById('input-tipo-veiculo').value.trim();
 
-            bootstrap.Modal.getInstance(modal).hide();
-            $('#entregadores-table').DataTable().ajax.reload();
-            toastr.success('Operação realizada com sucesso!');
-        } catch (error) {
-            toastr.error('Erro ao processar operação.');
-            console.error(error);
-        }
-    });
-
-    document.addEventListener('click', async (e) => {
-        if (e.target.matches('[data-edit]')) {
-            const id = e.target.dataset.edit;
-            const response = await fetch(`/entregadores/${id}/edit`);
-            const data = await response.json();
-
-            Object.keys(data).forEach(key => {
-                const input = form.querySelector(`[name=${key}]`);
-                if (input) input.value = data[key];
-            });
-
-            form.dataset.mode = 'edit';
-            form.dataset.id = id;
-            bootstrap.Modal.getInstance(modal).show();
+        if (!nome || !telefone || !tipoVeiculo) {
+            Swal.fire('Atenção!', 'Preencha todos os campos obrigatórios.', 'warning');
+            return;
         }
 
-        if (e.target.matches('[data-delete]')) {
-            if (confirm('Confirma a exclusão?')) {
-                try {
-                    await service.excluir(e.target.dataset.delete);
-                    $('#entregadores-table').DataTable().ajax.reload();
-                    toastr.success('Entregador excluído com sucesso!');
-                } catch (error) {
-                    toastr.error('Erro ao excluir entregador.');
-                    console.error(error);
+        entregadorService.criar({ nome, telefone, tipoVeiculo: tipoVeiculo })
+            .then(() => {
+                offcanvas.hide();
+                Swal.fire('Sucesso!', 'Entregador cadastrado com sucesso.', 'success');
+                $('#entregadores-table').DataTable().ajax.reload();
+            })
+            .catch(error => {
+                console.error(error);
+                if (error.response && error.response.data.errors) {
+                    const mensagens = Object.values(error.response.data.errors).flat().join('<br>');
+                    Swal.fire('Erro de Validação', mensagens, 'error');
+                } else {
+                    Swal.fire('Erro!', 'Erro ao cadastrar o entregador.', 'error');
                 }
+            });
+    });
+};
+
+export const editarEntregador = async (id) => {
+    try {
+        const response = await entregadorService.buscar(id);
+        const entregador = response.data;
+        console.log(entregador);
+        
+        const formHtml = `
+            <form id="form-editar-entregador" class="d-flex flex-column h-100">
+                <div class="flex-grow-1">
+                    <div class="mb-3 text-start">
+                        <label for="input-name" class="form-label">Nome</label>
+                        <input id="input-name" class="form-control" value="${entregador.nome}" placeholder="Digite o nome">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="input-telefone" class="form-label">Telefone</label>
+                        <input id="input-telefone" class="form-control" value="${entregador.telefone}" placeholder="Digite o telefone">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="input-tipo-veiculo" class="form-label">Tipo de Veículo</label>
+                        <select id="input-tipo-veiculo" class="form-select">
+                            <option value="">Selecione o tipo de veículo</option>
+                            <option value="bicicleta" ${entregador.tipoVeiculo === 'bicicleta' ? 'selected' : ''}>Bicicleta</option>
+                            <option value="caminhao" ${entregador.tipoVeiculo === 'caminhao' ? 'selected' : ''}>Caminhão</option>
+                            <option value="van" ${entregador.tipoVeiculo === 'van' ? 'selected' : ''}>Van</option>
+                            <option value="motocicleta" ${entregador.tipoVeiculo === 'motocicleta' ? 'selected' : ''}>Motocicleta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
+                </div>
+            </form>
+        `;
+
+        document.getElementById('OffcanvasLabel').innerText = 'Editar Entregador';
+        document.getElementById('OffcanvasContent').innerHTML = formHtml;
+
+        const offcanvas = new Offcanvas(document.getElementById('Offcanvas'));
+        offcanvas.show();
+
+        document.getElementById('form-editar-entregador').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nome = document.getElementById('input-name').value.trim();
+            const telefone = document.getElementById('input-telefone').value.trim();
+            const tipoVeiculo = document.getElementById('input-tipo-veiculo').value.trim();
+
+            if (!nome || !telefone || !tipoVeiculo) {
+                Swal.fire('Atenção!', 'Preencha todos os campos obrigatórios.', 'warning');
+                return;
             }
+
+            entregadorService.atualizar(id, { nome, telefone, tipoVeiculo })
+                .then(() => {
+                    offcanvas.hide();
+                    Swal.fire('Sucesso!', 'Entregador atualizado com sucesso.', 'success');
+                    $('#entregadores-table').DataTable().ajax.reload();
+                })
+                .catch(error => {
+                    console.error(error);
+                    if (error.response && error.response.data.errors) {
+                        const mensagens = Object.values(error.response.data.errors).flat().join('<br>');
+                        Swal.fire('Erro de Validação', mensagens, 'error');
+                    } else {
+                        Swal.fire('Erro!', 'Erro ao atualizar o entregador.', 'error');
+                    }
+                });
+        });
+
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Erro!', 'Não foi possível carregar os dados do entregador.', 'error');
+    }
+};
+
+export const excluirEntregador = (id) => {
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: 'Esta ação não poderá ser desfeita!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            entregadorService.deletar(id)
+                .then(() => {
+                    Swal.fire('Excluído!', 'O entregador foi excluído com sucesso.', 'success');
+                    $('#entregadores-table').DataTable().ajax.reload();
+                })
+                .catch(error => {
+                    console.error(error);
+                    Swal.fire('Erro!', 'Erro ao excluir o entregador.', 'error');
+                });
         }
     });
-}
+};

@@ -2,23 +2,68 @@ export function initDataTable() {
     const table = $('#pedidos-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/pedidos/data',
+        ajax: '/pedido',
         columns: [
-            { data: 'id', name: 'id' },
-            { data: 'cliente', name: 'cliente' },
-            { data: 'entregador', name: 'entregador' },
-            { data: 'endereco_entrega', name: 'endereco_entrega' },
-            { data: 'status', name: 'status' },
-            { data: 'data_entrega', name: 'data_entrega' },
+            { data: 'id', title: 'id' },
+            { data: 'numeroPedido', title: 'Pedido' },
+            { data: 'destinatarioNome', title: 'Destinatario' },
+            { data: 'destinatarioEndereco', title: 'Endereço' },
+            { data: 'destinatarioTelefone', title: 'Telefone' },
+            { data: 'itemDescricao', title: 'Item' },
+            { data: 'entregador.nome', title: 'Entregador' },
             {
-                data: 'action',
-                name: 'action',
+                data: 'status',
+                title: 'Status',
+                render: function(data, type, row) {
+                    let badgeClass = '';
+            
+                    switch (data) {
+                        case 'criado':
+                            badgeClass = 'badge bg-primary'; // Azul
+                            break;
+                        case 'aguardando coleta':
+                            badgeClass = 'badge bg-warning text-dark'; // Amarelo
+                            break;
+                        case 'coleta realizada':
+                            badgeClass = 'badge bg-info'; // Azul Claro
+                            break;
+                        case 'saiu para entrega':
+                            badgeClass = 'badge bg-secondary'; // Cinza
+                            break;
+                        case 'entrega realizada':
+                            badgeClass = 'badge bg-success'; // Verde
+                            break;
+                        case 'cancelado':
+                            badgeClass = 'badge bg-danger'; // Vermelho
+                            break;
+                        default:
+                            badgeClass = 'badge bg-light text-dark'; // Cinza claro para outros
+                    }
+            
+                    return `<span class="${badgeClass}">${data}</span>`;
+                }
+            },
+            {
+                data: null,
                 orderable: false,
-                searchable: false
+                searchable: false,
+                render: function (data, type, row) {
+                    return `
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-light btn-extra-small edit-btn" data-id="${row.id}" title="Editar" type="button">
+                                <i class="fas fa-pen" style="font-size: 10px;"></i>
+                            </a>
+                            <a class="btn btn-light btn-extra-small delete-btn" data-id="${row.id}" title="Excluir" type="button">
+                                <i class="fas fa-trash" style="font-size: 10px;"></i>
+                            </a>
+                        </div>
+                    `;
+                }
             }
+            
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json'
+            url: `assets/dataTable_pt-br.json`,
         },
         order: [[0, 'desc']]
     });

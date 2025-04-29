@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use App\Traits\ValidationMessages;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class PedidoController extends Controller
 {
@@ -94,7 +95,7 @@ class PedidoController extends Controller
             'destinatarioTelefone' => 'required|phone:BR',
             'itemDescricao' => 'required|string|max:500',
             'entregador_id' => 'required|exists:entregador,id,deleted_at,NULL',
-            'status' => 'required|in:aguardando,em andamento,entrega realizada'
+            'status' => 'required'
         ], $this->getPedidoValidationMessages());
 
         $pedido->update($validate);

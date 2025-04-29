@@ -37,9 +37,6 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Método não implementado.'], 501);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -57,9 +54,6 @@ class UsuarioController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, string $id)
     {
         $usuario = User::find($id);
@@ -70,17 +64,11 @@ class UsuarioController extends Controller
         return response()->json($usuario);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $usuario)
     {
         return response()->json(['message' => 'Método não implementado.'], 501);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $usuario = User::find($id);
@@ -109,9 +97,6 @@ class UsuarioController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, string $id)
     {
         $usuario = User::find($id);

@@ -92,7 +92,7 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <h4 class="card-title">Lista de Pedidos</h4>
-                                <button class="btn btn-primary btn-round ml-auto">
+                                <button id="novoPedidoBtn" class="btn btn-primary btn-round ml-auto">
                                     <i class="fa fa-plus"></i>
                                     Novo Pedido
                                 </button>
