@@ -27,6 +27,7 @@ export function inicializarDataTable() {
                 data: null,
                 orderable: false,
                 searchable: false,
+                className: 'text-end',
                 render: function (data, type, row) {
                     return `
                         <div class="btn-group" role="group">

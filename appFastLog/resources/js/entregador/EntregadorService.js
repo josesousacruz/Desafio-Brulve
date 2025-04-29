@@ -8,7 +8,6 @@ export default class EntregadorService {
     }
 
     async criar(data) {
-        console.log(data)
         return axios.post(this.baseURL, data);
     }
 
@@ -22,5 +21,9 @@ export default class EntregadorService {
 
     async buscar(id) {
         return axios.get(`${this.baseURL}/${id}`);
+    }
+
+    async tipoVeiculo() {
+        return axios.get(`/tipo-veiculo`);
     }
 }

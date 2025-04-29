@@ -119,7 +119,8 @@ export const editarUsuario = async (id) => {
             const email = document.getElementById('input-email').value.trim();
 
             if (!name || !email) {
-                alert('Preencha todos os campos!');
+            
+                Swal.fire('Erro!', 'Preencha todos os campos!', 'error');
                 return;
             }
 

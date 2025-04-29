@@ -1,6 +1,6 @@
 import EntregadorService from './EntregadorService';
 import Swal from 'sweetalert2';
-import { Offcanvas } from'bootstrap';
+import { Offcanvas } from 'bootstrap';
 
 const entregadorService = new EntregadorService();
 
@@ -22,10 +22,6 @@ export const criarEntregador = () => {
                     <label for="input-tipo-veiculo" class="form-label">Tipo de Veículo <span class="text-danger">*</span></label>
                     <select id="input-tipo-veiculo" class="form-select">
                         <option value="">Selecione o tipo de veículo</option>
-                        <option value="bicicleta">Bicicleta</option>
-                        <option value="caminhao">Caminhão</option>
-                        <option value="van">Van</option>
-                        <option value="motocicleta">Motocicleta</option>
                     </select>
                 </div>
             </div>
@@ -40,11 +36,28 @@ export const criarEntregador = () => {
     document.getElementById('OffcanvasLabel').innerText = 'Cadastrar Entregador';
     document.getElementById('OffcanvasContent').innerHTML = formHtml;
 
+entregadorService.tipoVeiculo()
+    .then(response => {
+        console.log(response.data);
+        
+        const tipoVeiculoSelect = document.getElementById('input-tipo-veiculo');
+        response.data.forEach(tipo => {
+            const option = document.createElement('option');
+            option.value = tipo.id;
+            option.textContent = tipo.tipo;
+            tipoVeiculoSelect.appendChild(option);
+        });
+    })
+    .catch(error => {
+        console.error('Error loading vehicle types:', error);
+        Swal.fire('Erro!', 'Não foi possível carregar os tipos de veículo.', 'error');
+    });
+
     const offcanvasElement = document.getElementById('Offcanvas');
     const offcanvas = new Offcanvas(offcanvasElement);
     offcanvas.show();
 
-    document.getElementById('form-criar-entregador').addEventListener('submit', function(e) {
+    document.getElementById('form-criar-entregador').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const nome = document.getElementById('input-name').value.trim();
@@ -56,7 +69,7 @@ export const criarEntregador = () => {
             return;
         }
 
-        entregadorService.criar({ nome, telefone, tipoVeiculo: tipoVeiculo })
+        entregadorService.criar({ nome, telefone, tipo_veiculo_id: tipoVeiculo })
             .then(() => {
                 offcanvas.hide();
                 Swal.fire('Sucesso!', 'Entregador cadastrado com sucesso.', 'success');
@@ -79,7 +92,7 @@ export const editarEntregador = async (id) => {
         const response = await entregadorService.buscar(id);
         const entregador = response.data;
         console.log(entregador);
-        
+
         const formHtml = `
             <form id="form-editar-entregador" class="d-flex flex-column h-100">
                 <div class="flex-grow-1">
@@ -95,10 +108,6 @@ export const editarEntregador = async (id) => {
                         <label for="input-tipo-veiculo" class="form-label">Tipo de Veículo</label>
                         <select id="input-tipo-veiculo" class="form-select">
                             <option value="">Selecione o tipo de veículo</option>
-                            <option value="bicicleta" ${entregador.tipoVeiculo === 'bicicleta' ? 'selected' : ''}>Bicicleta</option>
-                            <option value="caminhao" ${entregador.tipoVeiculo === 'caminhao' ? 'selected' : ''}>Caminhão</option>
-                            <option value="van" ${entregador.tipoVeiculo === 'van' ? 'selected' : ''}>Van</option>
-                            <option value="motocicleta" ${entregador.tipoVeiculo === 'motocicleta' ? 'selected' : ''}>Motocicleta</option>
                         </select>
                     </div>
                 </div>
@@ -116,7 +125,26 @@ export const editarEntregador = async (id) => {
         const offcanvas = new Offcanvas(document.getElementById('Offcanvas'));
         offcanvas.show();
 
-        document.getElementById('form-editar-entregador').addEventListener('submit', function(e) {
+        // Carregar tipos de veículo
+        entregadorService.tipoVeiculo()
+            .then(response => {
+                const tipoVeiculoSelect = document.getElementById('input-tipo-veiculo');
+                response.data.forEach(tipo => {
+                    const option = document.createElement('option');
+                    option.value = tipo.id;
+                    option.textContent = tipo.tipo;
+                    if (entregador.tipo_veiculo_id === tipo.id) {
+                        option.selected = true;
+                    }
+                    tipoVeiculoSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading vehicle types:', error);
+                Swal.fire('Erro!', 'Não foi possível carregar os tipos de veículo.', 'error');
+            });
+
+        document.getElementById('form-editar-entregador').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const nome = document.getElementById('input-name').value.trim();
@@ -128,7 +156,7 @@ export const editarEntregador = async (id) => {
                 return;
             }
 
-            entregadorService.atualizar(id, { nome, telefone, tipoVeiculo })
+            entregadorService.atualizar(id, { nome, telefone, tipo_veiculo_id: tipoVeiculo })
                 .then(() => {
                     offcanvas.hide();
                     Swal.fire('Sucesso!', 'Entregador atualizado com sucesso.', 'success');
@@ -169,8 +197,13 @@ export const excluirEntregador = (id) => {
                     $('#entregadores-table').DataTable().ajax.reload();
                 })
                 .catch(error => {
-                    console.error(error);
-                    Swal.fire('Erro!', 'Erro ao excluir o entregador.', 'error');
+
+                    let mensagemErro = 'Erro ao excluir o entregador.';
+                    if (error.response && error.response.data && error.response.data.message) {
+                        mensagemErro = error.response.data.message;
+                    }
+
+                    Swal.fire('Erro!', mensagemErro, 'error');
                 });
         }
     });

@@ -29,42 +29,31 @@
                         <i class="fa fa-search"></i>
                     </a>
                 </li>
-                <li class="nav-item topbar-user dropdown hidden-caret">
-                    <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-                        <div class="avatar-sm">
-                            <img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
-                        </div>
-                        <span class="profile-username">
-                            <span class="fw-bold">{{ Auth::user()->name }}</span>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user animated fadeIn">
-                        <div class="dropdown-user-scroll scrollbar-outer">
-                            <li>
-                                <div class="user-box">
-                                    <div class="avatar-lg">
-                                        <img src="assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
-                                    </div>
-                                    <div class="u-text">
-                                        <h4>{{ Auth::user()->name }}</h4>
-                                        <p class="text-muted">{{ Auth::user()->email }}</p>
-                                        <a href="{{ route('profile.edit')}}" class="btn btn-xs btn-secondary btn-sm">Meu perfil</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="dropdown-divider"></div>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </li>
-                        </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="assets/img/profile.jpg" alt="Profile" class="rounded-circle me-2" style="width: 32px; height: 32px;" />
+                        <span class="fw-bold">{{ Auth::user()->name }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li class="px-3 py-2 text-center">
+                            <img src="assets/img/profile.jpg" alt="Profile" class="rounded-circle mb-2" style="width: 64px; height: 64px;" />
+                            <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+                            <small class="text-muted">{{ Auth::user()->email }}</small>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center" href="{{ route('profile.edit') }}">Meu perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-center text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </li>
                     </ul>
-                </li>
+                </div>
+                
             </ul>
         </div>
     </nav>

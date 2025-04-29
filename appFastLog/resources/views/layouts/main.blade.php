@@ -56,6 +56,13 @@
         </div>
     </div>
 
+    <!-- Core Scripts -->
+    <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="/assets/js/kaiadmin.min.js"></script>
+
     <!-- Scripts específicos da página -->
     @yield('scripts')
 </body>
