@@ -16,8 +16,9 @@ export function initDataTable() {
                 title: 'Status',
                 render: function(data, type, row) {
                     let badgeClass = '';
-            
-                    switch (data) {
+                    let status = row.status_pedido?.status?.toLowerCase(); // protege contra null e normaliza o texto
+
+                    switch (status) {
                         case 'criado':
                             badgeClass = 'badge bg-primary'; // Azul
                             break;
@@ -40,7 +41,7 @@ export function initDataTable() {
                             badgeClass = 'badge bg-light text-dark'; // Cinza claro para outros
                     }
             
-                    return `<span class="${badgeClass}">${data}</span>`;
+                    return `<span class="${badgeClass}">${status}</span>`;
                 }
             },
             {

@@ -26,4 +26,17 @@ export default class PedidoService {
     async atualizarStatus(id, status) {
         return axios.put(`${this.baseURL}/${id}/status`, { status });
     }
+
+    async tipoVeiculo() {
+        return axios.get(`/tipo-veiculo`);
+    }
+
+    async statusPedido() {
+        return axios.get(`/status-pedido`);
+    }
+
+    async entregadoresDisponivel(id_tipo_veiculo) {
+        return axios.get(`/entregadores-disponiveis/${id_tipo_veiculo}`);
+    }
+
 }

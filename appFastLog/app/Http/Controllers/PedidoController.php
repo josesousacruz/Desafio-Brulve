@@ -45,7 +45,7 @@ class PedidoController extends Controller
                 'destinatarioEndereco' => 'required|string|max:200',
                 'destinatarioTelefone' => 'required|phone:BR',
                 'itemDescricao' => 'required|string|max:500',
-                'entregador_id' => 'required|exists:entregador,id'
+                'tipo_veiculo_id' => 'required|exists:tipo_veiculo,id'
             ], $this->getPedidoValidationMessages());
 
         $pedido = Pedido::create($validate);
@@ -81,6 +81,8 @@ class PedidoController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        // return $request;
         $pedido = Pedido::find($id);
         
         if(!$pedido){

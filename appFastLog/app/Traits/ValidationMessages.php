@@ -48,8 +48,9 @@ trait ValidationMessages
             'itemDescricao.required' => 'A descrição do item é obrigatória.',
             'itemDescricao.max' => 'A descrição do item não pode ter mais que :max caracteres.',
 
-            'entregador_id.required' => 'O entregador é obrigatório.',
-            'entregador_id.exists' => 'O entregador selecionado não existe.',
+            'tipo_veiculo_id.required' => 'O tipo de veículo é obrigatório.',
+            'tipo_veiculo_id.in' => 'O tipo de veículo informado é inválido.',
+            'tipo_veiculo_id.exists' => 'O status do pedido selecionado não existe.',
 
             'status.required' => 'O status é obrigatório.',
             'status.in' => 'O status informado é inválido.'
