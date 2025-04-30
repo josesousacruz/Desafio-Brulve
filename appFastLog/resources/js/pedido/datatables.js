@@ -52,6 +52,11 @@ export function initDataTable() {
                 render: function (data, type, row) {
                     return `
                         <div class="btn-group" role="group">
+                            ${(row.entregador && row.status_pedido?.id !== 5 && row.status_pedido?.id !== 6) ? `
+                            <a class="btn btn-light btn-extra-small up-status-btn" data-id="${row.id}" title="Atualizar Status" type="button">
+                                <i class="bi bi-arrow-up-circle-fill"></i>
+                            </a>
+                            ` : ''}
                             <a class="btn btn-light btn-extra-small edit-btn" data-id="${row.id}" title="Editar" type="button">
                                 <i class="fas fa-pen" style="font-size: 10px;"></i>
                             </a>

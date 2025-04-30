@@ -1,6 +1,6 @@
 import PedidoService from './PedidoService';
 import { initDataTable } from './datatables';
-import { criarPedido, editarPedido, excluirPedido } from './functions';
+import { criarPedido, editarPedido, excluirPedido, updateStatus } from './functions';
 
 const service = new PedidoService();
 $(function () {
@@ -9,7 +9,7 @@ $(function () {
     $(document).on('click', '#novoPedidoBtn', function () {
         criarPedido();
     });
-    // exemplo de delegação para botão de exclusão
+    
     $(document).on('click', '.delete-btn', function () {
         const id = $(this).data('id');
         excluirPedido(id);
@@ -21,4 +21,9 @@ $(function () {
         editarPedido(id);
     });
 
+    $(document).on('click', '.up-status-btn', function () {
+        const id = $(this).data('id');
+
+        updateStatus(id);
+    });
 })

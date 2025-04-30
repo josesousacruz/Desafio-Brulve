@@ -8,6 +8,7 @@ if (typeof window.jQuery === 'undefined') {
 }
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'datatables.net'; 
 import 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';

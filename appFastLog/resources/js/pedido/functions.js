@@ -342,3 +342,17 @@ export const atualizarStatusPedido = (id, status) => {
             Swal.fire('Erro!', 'Erro ao atualizar o status do pedido.', 'error');
         });
 };
+
+export const updateStatus = (id) => {
+    pedidoService.atualizarStatus(id)
+       .then(() => {
+            Swal.fire('Sucesso!', 'Status do pedido atualizado com sucesso.','success');
+            $('#pedidos-table').DataTable().ajax.reload();
+        })
+       .catch(error => {
+            console.error(error);
+            Swal.fire('Erro!', 'Erro ao atualizar o status do pedido.', 'error');
+       })
+    console.log(id);
+    
+}

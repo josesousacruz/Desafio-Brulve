@@ -23,8 +23,8 @@ export default class PedidoService {
         return axios.get(`${this.baseURL}/${id}`);
     }
 
-    async atualizarStatus(id, status) {
-        return axios.put(`${this.baseURL}/${id}/status`, { status });
+    async atualizarStatus(id) {
+        return axios.put(`${this.baseURL}/proximo-status/${id}`);
     }
 
     async tipoVeiculo() {
