@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('entregador', EntregadorController::class);
     Route::resource('pedido', PedidoController::class);
 
+    Route::put('/pedido/proximo-status/{id}', [PedidoController::class, 'atualizarStatus'])->name('pedido.atualizar-status');
+
     Route::get('/entregadores-disponiveis', [EntregadorController::class, 'entregadoresDisponiveis'])->name('entregador.disponivel');
     Route::get('/entregadores-disponiveis/{id}', [EntregadorController::class, 'entregadoresDisponiveisPorTipoVeiculo'])->name('entregador.disponivel.veiculo');
 

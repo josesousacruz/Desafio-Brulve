@@ -1,0 +1,152 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "FastLog API",
+        "description": "API para gerenciamento de entregas via API REST.<br><br><div style='padding: 1em; background: #f9f9f9; border: 1px solid #ddd; margin-top: 1em;'><h3>🔐 Como gerar token de autenticação</h3><ol><li>Faça uma requisição <code>POST</code> para <code>/api/v1/login</code> com o seguinte corpo:<pre>{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"senha123\"\n}</pre></li><li>Copie o valor do <code>token</code> retornado na resposta.</li><li>Clique no botão <strong>Authorize</strong> no canto superior direito.</li><li>Preencha com: <code>Bearer SEU_TOKEN</code> e confirme.</li></ol><p>Você também pode renovar o token usando <code>POST /api/v1/token</code> (usuário deve estar autenticado).</p></div>",
+        "contact": {
+            "email": "admin@fastlog.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "API FastLog"
+        }
+    ],
+    "paths": {
+        "/api/pedidos": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Lista todos os pedidos",
+                "operationId": "9368500233e75a120cb606e08d7a06e4",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Pedido"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": {
+                    "bearerAuth": {}
+                }
+            }
+        },
+        "/api/pedidos/{id}": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Retorna um pedido específico",
+                "operationId": "69873c1dd29645d07e53a4c4db9057e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do pedido",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pedido encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pedido"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pedido não encontrado"
+                    }
+                },
+                "security": {
+                    "bearerAuth": {}
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Pedido": {
+                "required": [
+                    "numeroPedido",
+                    "destinatarioNome",
+                    "destinatarioEndereco",
+                    "destinatarioTelefone",
+                    "itemDescricao",
+                    "entregador",
+                    "status_pedido_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "ID do pedido",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "numeroPedido": {
+                        "description": "Número único do pedido",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "destinatarioNome": {
+                        "description": "Nome do destinatário",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "destinatarioEndereco": {
+                        "description": "Endereço de entrega",
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "destinatarioTelefone": {
+                        "description": "Telefone do destinatário",
+                        "type": "string"
+                    },
+                    "itemDescricao": {
+                        "description": "Descrição do item a ser entregue",
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "entregador": {
+                        "description": "Nome do Entregador Responsável pelo pedido.",
+                        "type": "string"
+                    },
+                    "status_pedido_id": {
+                        "description": "ID do status do pedido Tabela: [1 - Criado | 2 - Aguardando Coleta | 3 - Colea Realizada | 4 - Saiu para entrega | 5 - Entregue Realizado | 6 - Cancelado ]",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Pedidos",
+            "description": "API Endpoints de gerenciamento de pedidos"
+        }
+    ]
+}
