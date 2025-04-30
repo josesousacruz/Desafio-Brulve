@@ -22,7 +22,7 @@ class EntregadorController extends Controller
             return DataTables::of($entregadores)
             ->addIndexColumn()
             ->make(true);
-        }
+        } 
 
         return view('entregador.index');
     }

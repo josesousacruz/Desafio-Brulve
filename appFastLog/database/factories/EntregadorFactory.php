@@ -20,7 +20,7 @@ class EntregadorFactory extends Factory
         return [
             'nome' => $this->faker->name(),
             'telefone' => $this->faker->phoneNumber(),
-            'tipoVeiculo' => $this->faker->randomElement(['bicicleta', 'caminhão', 'van','motocicleta']),
+            'tipoVeiculo' => $this->faker->randomElement([1,2,3,4]),
         ];
     }
 }

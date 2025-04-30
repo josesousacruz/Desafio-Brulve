@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "FastLog API",
-        "description": "API para gerenciamento de entregas via API REST.<br><br><div style='padding: 1em; background: #f9f9f9; border: 1px solid #ddd; margin-top: 1em;'><h3>🔐 Como gerar token de autenticação</h3><ol><li>Faça uma requisição <code>POST</code> para <code>/api/v1/login</code> com o seguinte corpo:<pre>{\n  \"email\": \"usuario@exemplo.com\",\n  \"password\": \"senha123\"\n}</pre></li><li>Copie o valor do <code>token</code> retornado na resposta.</li><li>Clique no botão <strong>Authorize</strong> no canto superior direito.</li><li>Preencha com: <code>Bearer SEU_TOKEN</code> e confirme.</li></ol><p>Você também pode renovar o token usando <code>POST /api/v1/token</code> (usuário deve estar autenticado).</p></div>",
+        "description": "API para gerenciamento de entregas via API REST",
         "contact": {
             "email": "admin@fastlog.com"
         },
@@ -10,11 +10,132 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://my-default-host.com",
             "description": "API FastLog"
+        },
+        {
+            "url": "http://localhost/api/",
+            "description": "API Local Server"
         }
     ],
     "paths": {
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Realiza autenticação do usuário e retorna um token de acesso",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "usuario@exemplo.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "senha123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|laravel_sanctum_token_hash"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Credenciais inválidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/token": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Gera um novo token de acesso para um usuário autenticado",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "Token gerado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "novo_token_de_acesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Não autorizado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/pedidos": {
             "get": {
                 "tags": [
@@ -90,7 +211,7 @@
                     "destinatarioEndereco",
                     "destinatarioTelefone",
                     "itemDescricao",
-                    "entregador",
+                    "entregador_id",
                     "status_pedido_id"
                 ],
                 "properties": {
@@ -123,12 +244,12 @@
                         "type": "string",
                         "maxLength": 500
                     },
-                    "entregador": {
-                        "description": "Nome do Entregador Responsável pelo pedido.",
-                        "type": "string"
+                    "entregador_id": {
+                        "description": "ID do entregador responsável",
+                        "type": "integer"
                     },
                     "status_pedido_id": {
-                        "description": "ID do status do pedido Tabela: [1 - Criado | 2 - Aguardando Coleta | 3 - Colea Realizada | 4 - Saiu para entrega | 5 - Entregue Realizado | 6 - Cancelado ]",
+                        "description": "ID do status do pedido",
                         "type": "integer"
                     }
                 },
@@ -147,6 +268,10 @@
         {
             "name": "Pedidos",
             "description": "API Endpoints de gerenciamento de pedidos"
+        },
+        {
+            "name": "Autenticação",
+            "description": "Autenticação"
         }
     ]
 }
