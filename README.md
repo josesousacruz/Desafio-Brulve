@@ -165,5 +165,5 @@ Requisitos Principais:
 ## Documentação da API
 
 A documentação completa da API está disponível através do Swagger UI em:
-* [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+* api/documentation
 
